@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block title %}QuizMaster|About{% endblock %}
+
+
+{% block body %}
+  <!-- About Section -->
+  <section class="about py-5">
+    <div class="container text-center">
+      <h1 class="display-4 animated fadeIn" style="padding-bottom: 30px;">About QuizMaster</h1>
+      <p class="lead animated fadeIn delay-1s">QuizMaster is a fun, interactive platform designed to test and expand your knowledge across a variety of subjects. Whether you're a trivia enthusiast or a learner looking to challenge yourself, QuizMaster has the right quiz for you!</p>
+      
+      <!-- Mission, Vision, and Values -->
+      <div class="row mt-5" style="padding-top: 50px;">
+        <div class="col-md-4">
+          <div class="card animated fadeInUp delay-2s" >
+            <h3 style="padding-bottom: 10px;">Our Mission</h3>
+            <p style="margin: -2px;">Our mission is to provide a fun and educational platform for people to engage with quizzes and tests across various fields of knowledge. We aim to make learning fun while helping users grow their skills.</p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card animated fadeInUp delay-3s">
+            <h3 style="padding-bottom: 10px;">Our Vision</h3>
+            <p>We envision a community of lifelong learners who enjoy testing their knowledge and expanding their understanding in a playful and engaging environment.</p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card animated fadeInUp delay-4s">
+            <h3 style="padding-bottom: 10px;">Our Values</h3>
+            <ul>
+              <li>Learning is Fun</li>
+              <li>Engagement with Knowledge</li>
+              <li>Accessible to All</li>
+              <li>Community Collaboration</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Meet the Team -->
+      <div class="mt-5" style="padding-top: 10px;">
+        <h3 class="animated fadeInUp delay-5s" style="padding-bottom: 10px; padding-top: 56px;">Meet the Team</h3>
+        <p class="animated fadeInUp delay-6s">QuizMaster is built by a passionate team of developers, educators, and quiz lovers. We strive to continuously improve the platform to provide a fun and seamless experience for our users.</p>
+        <p class="animated fadeInUp delay-7s">Our team is constantly working on new quizzes, features, and improvements to make QuizMaster even more enjoyable!</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Add AOS Script for Scroll Animations -->
+  <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+  <script>
+    AOS.init({
+      duration: 1000, // Animation duration
+      easing: 'ease-in-out', // Easing function for smoothness
+      once: true, // Animation happens only once
+    });
+  </script>
+
+  <style>
+    .card {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Custom Animations for Text */
+    .animated {
+      opacity: 0;
+    }
+    .animated.fadeIn {
+      animation: fadeIn 1s forwards;
+    }
+    .animated.fadeInUp {
+      animation: fadeInUp 1s forwards;
+    }
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+      }
+    }
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+    }
+  </style>
+{% endblock %}

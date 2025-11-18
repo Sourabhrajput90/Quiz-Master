@@ -1,0 +1,203 @@
+{% extends "base.html" %}
+
+{% block title %}QuizMaster | Profile{% endblock %}
+
+{% block body %}
+
+<style>
+/* ---------------- GLOBAL STYLES ---------------- */
+body {
+    background: linear-gradient(135deg, #e3f2fd, #fce4ec);
+}
+
+.profile-header-title {
+    font-weight: 700;
+    font-size: 2.4rem;
+    letter-spacing: .5px;
+}
+
+/* ---------------- PROFILE CARD ---------------- */
+.profile-card {
+    border-radius: 18px;
+    padding: 30px;
+    background: rgba(255, 255, 255, 0.55);
+    backdrop-filter: blur(16px);
+    box-shadow: 0px 8px 25px rgba(0,0,0,0.1);
+    transition: .35s ease;
+}
+
+.profile-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0px 12px 35px rgba(0,0,0,0.15);
+}
+
+/* ---------------- PROFILE IMAGE ---------------- */
+.profile-pic-container {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.profile-pic-label img {
+    width: 170px;
+    height: 170px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 5px solid #fff;
+    box-shadow: 0px 6px 20px rgba(0,0,0,0.15);
+    transition: transform 0.35s;
+}
+
+.profile-pic-label:hover img {
+    transform: scale(1.08);
+}
+
+.overlay {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.55);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    color: #fff;
+    font-size: 18px;
+    font-weight: 600;
+    transition: .35s;
+}
+
+.profile-pic-container:hover .overlay {
+    opacity: 1;
+}
+
+/* ---------------- INFO TEXT ---------------- */
+.info-box p {
+    margin: 6px 0;
+    font-size: 1.05rem;
+}
+
+.info-label {
+    font-weight: 600;
+    color: #333;
+}
+
+/* ---------------- QUIZ HISTORY ---------------- */
+.quiz-card {
+    border-radius: 16px;
+    background: #fff;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+    padding: 22px;
+    transition: .3s ease;
+}
+
+.quiz-card:hover {
+    transform: translateY(-3px);
+}
+
+.quiz-item {
+    border: none;
+    padding: 16px 14px;
+    background: #f9f9f9;
+    margin-bottom: 10px;
+    border-radius: 12px;
+    transition: .25s;
+}
+
+.quiz-item:hover {
+    background: #ececec;
+    transform: translateX(4px);
+}
+</style>
+
+
+<section class="py-5">
+    <div class="container">
+
+        <!-- Header -->
+        <div class="text-center mb-5 animate__animated animate__fadeInDown">
+            <h2 class="profile-header-title">Profile of {{ user.username }}</h2>
+            <p class="lead">Welcome back to your QuizMaster dashboard!</p>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+
+                <!-- PROFILE CARD -->
+                <div class="profile-card mb-4 animate__animated animate__fadeInUp">
+
+                    <form method="POST" enctype="multipart/form-data" id="profilePictureForm" action="{% url 'update_profile' %}">
+                        {% csrf_token %}
+
+                        <div class="text-center mb-4">
+                            <div class="profile-pic-container" onclick="triggerFileInput()">
+                                <label for="profilePicInput" class="profile-pic-label">
+                                    {% if profile.profile_picture %}
+                                        <img id="profilePic" src="{{ profile.profile_picture.url }}" alt="Profile Picture">
+                                    {% else %}
+                                        <img id="profilePic" src="/media/default.jpg" alt="Default Profile Picture">
+                                    {% endif %}
+                                    <div class="overlay">Change</div>
+                                </label>
+                            </div>
+                            <input type="file" id="profilePicInput" name="profile_picture" accept="image/*" 
+                                style="display:none;" onchange="previewImage(event)">
+                        </div>
+
+                        <div class="info-box text-center">
+                            <p><span class="info-label">Username:</span> {{ user.username }}</p>
+                            <p><span class="info-label">Email:</span> {{ user.email }}</p>
+                            <p><span class="info-label">Member Since:</span> {{ user.date_joined|date:"F d, Y" }}</p>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- QUIZ HISTORY CARD -->
+                <div class="quiz-card animate__animated animate__fadeInUp animate__delay-1s">
+                    <h4 class="mb-3">Quiz History</h4>
+
+                    <ul class="list-group">
+                        {% if quiz_history %}
+                            {% for entry in quiz_history %}
+                                <li class="quiz-item d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <strong>{{ entry.quiz.title }}</strong>
+                                        <p class="mb-1">Score: {{ entry.score }} / {{ entry.total_questions }}</p>
+                                        <p class="mb-0">Percentage: {{ entry.percentage }}%</p>
+                                    </div>
+                                    <a href="{% url 'delete_quiz_attempt' entry.quiz.id %}" class="btn btn-danger btn-sm"
+                                        onclick="return confirm('Are you sure you want to delete this attempt?');">Delete</a>
+                                </li>
+                            {% endfor %}
+                        {% else %}
+                            <li class="quiz-item text-center">No quiz history available.</li>
+                        {% endif %}
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<script>
+function triggerFileInput() {
+    document.getElementById("profilePicInput").click();
+}
+
+function previewImage(event) {
+    let reader = new FileReader();
+    reader.onload = function() {
+        document.getElementById('profilePic').src = reader.result;
+    }
+    reader.readAsDataURL(event.target.files[0]);
+
+    setTimeout(() => {
+        document.getElementById('profilePictureForm').submit();
+    }, 500);
+}
+</script>
+
+{% endblock %}

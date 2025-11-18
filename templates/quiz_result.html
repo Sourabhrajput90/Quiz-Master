@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}Quiz Result{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h1 class="text-center">Quiz Result for {{ quiz.title }}</h1>
+
+    {% if user_score %}
+    <div class="card text-center mt-4">
+        <div class="card-body">
+            <h3>Your Score: {{ user_score.score }} / {{ user_score.total_questions }}</h3>
+            <p>Percentage: {{ user_score.percentage }}%</p>
+            <a href="{% url 'quiz_list' %}" class="btn btn-primary">Back to Quizzes</a>
+        </div>
+    </div>
+    {% else %}
+    <p class="text-center">No quiz results found. Please take the quiz first!</p>
+    {% endif %}
+</div>
+{% endblock %}

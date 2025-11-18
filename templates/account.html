@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block body %}
+    <div class="container mt-5">
+        <h2 style="padding-left: 42%; margin-bottom: 61px;">Account Settings</h2>
+
+        <!-- Display success/error messages -->
+       
+<!-- Account Settings Card -->
+<div class="col-md-6 mb-4">
+    <div class="card">
+        <div class="card-body">
+            <!-- Change Password Form -->
+            <form action="/account" method="POST">
+            {% csrf_token %} 
+                <div class="mb-3">
+                    <label for="current_password" class="form-label">Current Password</label>
+                    <input type="password" class="form-control" id="current_password" name="current_password" required>
+                </div>
+                <div class="mb-3">
+                    <label for="new_password" class="form-label">New Password</label>
+                    <input type="password" class="form-control" id="new_password" name="new_password" required>
+                </div>
+                <button type="submit" class="btn btn-primary" name="change_password">Change Password</button>
+            </form>
+            <hr>
+            <!-- Delete Account Form -->
+            <form action="/account", method="POST">
+                {% csrf_token %} 
+
+                <button type="submit" class="btn btn-danger" name="delete_account">Delete My Account</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+       
+{% endblock %}

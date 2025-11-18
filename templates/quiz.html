@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block title %} {{ quiz.title }} - Quiz {% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h2 class="text-center">{{ quiz.title }}</h2>
+    <p class="text-center">{{ quiz.description }}</p>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-danger">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+
+    <!-- Timer Display -->
+    <div id="timer" class="text-center my-3" style="font-size: 20px; font-weight: bold; color: red;"></div>
+
+    <!-- Quiz Form -->
+    <form id="quizForm" method="post" action="{% url 'submit_quiz' quiz.id %}" class="p-4">
+        {% csrf_token %}
+        {% for question in questions %}
+        <div class="card my-3">
+            <div class="card-body">
+                <h5>{{ question.question }}</h5>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="question_{{ question.id }}" value="{{ question.option1 }}">
+                    <label class="form-check-label">{{ question.option1 }}</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="question_{{ question.id }}" value="{{ question.option2 }}">
+                    <label class="form-check-label">{{ question.option2 }}</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="question_{{ question.id }}" value="{{ question.option3 }}">
+                    <label class="form-check-label">{{ question.option3 }}</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="question_{{ question.id }}" value="{{ question.option4 }}">
+                    <label class="form-check-label">{{ question.option4 }}</label>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        <button type="submit" class="btn btn-primary w-100">Submit Quiz</button>
+    </form>
+</div>
+
+<script>
+    // Quiz duration in minutes (passed from Django)
+    let duration = {{ quiz.duration }} * 60; 
+
+    function startTimer() {
+        let timerDisplay = document.getElementById('timer');
+        let interval = setInterval(function() {
+            let minutes = Math.floor(duration / 60);
+            let seconds = duration % 60;
+            timerDisplay.innerHTML = `Time Left: ${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+            duration--;
+
+            // Auto-submit when timer runs out
+            if (duration < 0) {
+                clearInterval(interval);
+                alert("⏳ Time is up! Submitting the quiz...");
+                document.getElementById('quizForm').submit();
+            }
+        }, 1000);
+    }
+
+    // Start the timer when the page loads
+    window.onload = startTimer;
+
+    // Validate that all questions are answered before submission
+    document.getElementById("quizForm").addEventListener("submit", function(event) {
+        let unanswered = 0;
+
+        {% for question in questions %}
+            if (document.querySelector('input[name="question_{{ question.id }}"]:checked') === null) {
+                unanswered++;
+            }
+        {% endfor %}
+
+        if (unanswered > 0) {
+            alert("⚠️ Please answer all questions before submitting!");
+            event.preventDefault();  // Stop form submission
+        }
+    });
+</script>
+
+{% endblock %}
