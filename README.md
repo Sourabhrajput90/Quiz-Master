@@ -99,4 +99,8 @@ It motivates further development 😊
 🤝 Contributing
 
 Contributions are welcome!
+<<<<<<< HEAD
 Feel free to submit issues or pull requests.
+=======
+Feel free to submit issues or pull requests.
+>>>>>>> 6e9e200ac449e243164aca0282ee386bd282e610
